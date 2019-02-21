@@ -30,7 +30,7 @@ test_script:
   - python .\test\chisel2.py example.letsencrypt.org elpmaxe.letsencrypt.org
 
 deploy_script:
-  - call .ci\publish_windows.bat
+  - ps: .ci\publish_windows.ps1
 
 on_finish:
   - ps: Stop-Process -Id $PebbleProcess.Id
