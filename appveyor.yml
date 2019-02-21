@@ -4,20 +4,37 @@ branches:
   only:
     - windows
 
+hosts:
+  example.letsencrypt.org: 127.0.0.1
+  elpmaxe.letsencrypt.org: 127.0.0.1
+
 environment:
   DOCKER_USER:
     secure: f+rx7+08JPIM/MAFC5YLew==
   DOCKER_PASS:
     secure: 2WgIPEABjxf1fjwGLEd7Lg==
+  GO111MODULE: on
 
 install:
-  - docker version
+  - git clone https://github.com/adferrand/certbot --branch fix-pipstrap-on-windows
+  - cd certbot
+  - python tools\venv3.py
+  - venv3\Scripts\activate.bat
+  - cd ..
 
 build_script:
-  - docker build -f docker/pebble/Dockerfile -t adferrand/pebble:nanoserver-sac2016 .
-  - docker build -f docker/pebble-challtestsrv/Dockerfile -t adferrand/pebble-challtestsrv:nanoserver-sac2016 .
+  - go install -v -mod=vendor ./...
+  - start /b cmd /c C:\gopath\bin\pebble.exe
+
+test_script:
+  - go vet ./...
+  - set REQUESTS_CA_BUNDLE=.\test\certs\pebble.minica.pem
+  - python .\test\chisel2.py example.letsencrypt.org elpmaxe.letsencrypt.org
+
 
 deploy_script:
+  - docker build -f docker/pebble/Dockerfile-windows -t adferrand/pebble:nanoserver-sac2016 .
+  - docker build -f docker/pebble-challtestsrv/Dockerfile-windows -t adferrand/pebble-challtestsrv:nanoserver-sac2016 .
   - docker login -u="%DOCKER_USER%" -p="%DOCKER_PASS%"
   - docker push adferrand/pebble:nanoserver-sac2016
   - docker push adferrand/pebble-challtestsrv:nanoserver-sac2016
