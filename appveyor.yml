@@ -26,7 +26,7 @@ install:
 
 build_script:
   - go install -v -mod=vendor ./...
-  - ps: $PebbleProcess = Start-Process pebble -PassThru
+  - ps: $PebbleProcess = Start-Process C:\gopath\bin\pebble.exe -PassThru
 
 test_script:
   - go vet ./...
