@@ -53,11 +53,11 @@ CLEAR_TXT = "http://localhost:8055/clear-txt"
 def wait_for_acme_server():
     """Wait for directory URL set in the DIRECTORY env variable to respond"""
     while True:
-    try:
-        urlopen(DIRECTORY)
-        break
-    except URLError:
-        time.sleep(0.1)
+        try:
+            urlopen(DIRECTORY)
+            break
+        except URLError:
+            time.sleep(0.1)
 
 def make_client(email=None):
     """Build an acme.Client and register a new account with a random key."""
