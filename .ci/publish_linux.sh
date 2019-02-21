@@ -25,7 +25,7 @@ for BASE_NAME in "${BASE_NAMES[@]}"; do
         docker tag "${IMAGE_NAME}:temp" "${IMAGE_NAME}:${TRAVIS_TAG}"
         docker push "${IMAGE_NAME}:${TRAVIS_TAG}"
 
-        echo "Try to publish image: ${IMAGE_NAME}:latest"
+        echo "Try to publish rolling image: ${IMAGE_NAME}:latest"
         docker tag "${IMAGE_NAME}:${TRAVIS_TAG}" "${IMAGE_NAME}:latest"
         docker push "${IMAGE_NAME}:latest"
     fi

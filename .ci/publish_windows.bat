@@ -1,5 +1,29 @@
-docker build -f docker/pebble/Dockerfile-windows -t adferrand/pebble:nanoserver-sac2016 .
-docker build -f docker/pebble-challtestsrv/Dockerfile-windows -t adferrand/pebble-challtestsrv:nanoserver-sac2016 .
+if "%APPVEYOR_REPO_TAG%"=="true" (
+    echo Publishing...
+) else (
+    echo "Skipping publishing"
+    exit /b 0
+)
+
 docker login -u="%DOCKER_USER%" -p="%DOCKER_PASS%"
-docker push adferrand/pebble:nanoserver-sac2016
-docker push adferrand/pebble-challtestsrv:nanoserver-sac2016
+
+set base_names = pebble pebble-challtestsrv
+(for %%a in (%base_names%) do (
+    set basename=%%a
+    set image_name="adferrand/%basename%"
+    set tag="%APPVEYOR_REPO_TAG_NAME%-nanoserver-sac2016"
+
+    echo "Updating docker %basename% image..."
+
+    docker build -t "%image_name%:temp" -f "docker/%base_name%/Dockerfile-windows" .
+
+    echo "Try to publish image: %image_name%/%tag%"
+    docker tag "%image_name%:temp" "%image_name%/%tag%"
+    docker push "%image_name%/%tag%"
+
+    echo "Try to publish rolling image: %image_name%/nanoserver-sac2016"
+    docker tag "%image_name%:temp" "%image_name%/nanoserver-sac2016"
+    docker push "%image_name%/nanoserver-sac2016"
+))
+
+echo "Published"
