@@ -15,7 +15,6 @@ environment:
     secure: 2WgIPEABjxf1fjwGLEd7Lg==
   GO111MODULE: on
   GOPATH: C:\gopath
-  REQUESTS_CA_BUNDLE: test\certs\pebble.minica.pem
 
 install:
   - set PATH=C:\Python37;C:\Python37\Scripts;%PATH%
@@ -31,6 +30,7 @@ build_script:
 
 test_script:
   - go vet ./...
+  - set REQUESTS_CA_BUNDLE=test\certs\pebble.minica.pem
   - python .\test\chisel2.py example.letsencrypt.org elpmaxe.letsencrypt.org
 
 deploy_script:
