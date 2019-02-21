@@ -12,7 +12,7 @@ environment:
   DOCKER_USER:
     secure: f+rx7+08JPIM/MAFC5YLew==
   DOCKER_PASS:
-    secure: 2WgIPEABjxf1fjwGLEd7Lg==
+    secure: srzjN1Ls5U+eCDPfoovBlg==
   GO111MODULE: on
   GOPATH: C:\gopath
 
