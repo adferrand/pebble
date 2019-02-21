@@ -56,7 +56,8 @@ def wait_for_acme_server():
         try:
             urlopen(DIRECTORY)
             break
-        except URLError:
+        except URLError as e:
+            print(e)
             time.sleep(0.1)
 
 def make_client(email=None):
