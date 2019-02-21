@@ -27,17 +27,15 @@ build_script:
   - go install -v -mod=vendor ./...
   - set
   - ls C:\gopath\bin
-  - start /b cmd /c C:\gopath\bin\pebble.exe
+  - ps: $PebbleProcess = Start-Process C:\gopath\bin\pebble.exe -PassThru
 
 test_script:
   - go vet ./...
   - set REQUESTS_CA_BUNDLE=.\test\certs\pebble.minica.pem
   - python .\test\chisel2.py example.letsencrypt.org elpmaxe.letsencrypt.org
 
-
 deploy_script:
-  - docker build -f docker/pebble/Dockerfile-windows -t adferrand/pebble:nanoserver-sac2016 .
-  - docker build -f docker/pebble-challtestsrv/Dockerfile-windows -t adferrand/pebble-challtestsrv:nanoserver-sac2016 .
-  - docker login -u="%DOCKER_USER%" -p="%DOCKER_PASS%"
-  - docker push adferrand/pebble:nanoserver-sac2016
-  - docker push adferrand/pebble-challtestsrv:nanoserver-sac2016
+  - call .ci\publish_windows.bat
+
+on_finish:
+  - ps: Stop-Process -Id $PebbleProcess.Id
