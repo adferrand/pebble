@@ -1,0 +1,23 @@
+image: Visual Studio 2017
+
+branches:
+  only:
+    - windows
+
+environment:
+  DOCKER_USER:
+    secure: f+rx7+08JPIM/MAFC5YLew==
+  DOCKER_PASS:
+    secure: 2WgIPEABjxf1fjwGLEd7Lg==
+
+install:
+  - docker version
+
+build_script:
+  - docker build -f docker/pebble/Dockerfile -t adferrand/pebble:nanoserver-sac2016 .
+  - docker build -f docker/pebble-challtestsrv/Dockerfile -t adferrand/pebble-challtestsrv:nanoserver-sac2016 .
+
+deploy_script:
+  - docker login -u="%DOCKER_USER%" -p="%DOCKER_PASS%"
+  - docker push adferrand/pebble:nanoserver-sac2016
+  - docker push adferrand/pebble-challtestsrv:nanoserver-sac2016
