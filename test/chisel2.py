@@ -196,6 +196,6 @@ if __name__ == "__main__":
         sys.exit(0)
     try:
         auth_and_issue(domains)
-    except messages.Error, e:
+    except messages.Error as e:
         print(e)
         sys.exit(1)

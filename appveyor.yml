@@ -15,8 +15,10 @@ environment:
     secure: 2WgIPEABjxf1fjwGLEd7Lg==
   GO111MODULE: on
   GOPATH: C:\gopath
+  REQUESTS_CA_BUNDLE: test\certs\pebble.minica.pem
 
 install:
+  - set PATH=C:\Python37;C:\Python37\Scripts;%PATH%
   - git clone https://github.com/adferrand/certbot --branch fix-pipstrap-on-windows
   - cd certbot
   - python tools\venv3.py
@@ -25,13 +27,10 @@ install:
 
 build_script:
   - go install -v -mod=vendor ./...
-  - set
-  - ls C:\gopath\bin
-  - ps: $PebbleProcess = Start-Process C:\gopath\bin\pebble.exe -PassThru
+  - ps: $PebbleProcess = Start-Process pebble -PassThru
 
 test_script:
   - go vet ./...
-  - set REQUESTS_CA_BUNDLE=.\test\certs\pebble.minica.pem
   - python .\test\chisel2.py example.letsencrypt.org elpmaxe.letsencrypt.org
 
 deploy_script:
