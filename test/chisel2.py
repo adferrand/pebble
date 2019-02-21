@@ -12,6 +12,7 @@ from __future__ import print_function
 import json
 import logging
 import os
+import ssl
 import sys
 import signal
 import threading
@@ -52,9 +53,12 @@ CLEAR_TXT = "http://localhost:8055/clear-txt"
 
 def wait_for_acme_server():
     """Wait for directory URL set in the DIRECTORY env variable to respond"""
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
     while True:
         try:
-            urlopen(DIRECTORY)
+            urlopen(DIRECTORY, context=ctx)
             break
         except URLError as e:
             print(e)
