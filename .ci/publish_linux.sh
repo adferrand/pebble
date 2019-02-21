@@ -12,12 +12,12 @@ docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
 
 BASE_NAMES=(pebble pebble-challtestsrv)
 for BASE_NAME in "${BASE_NAMES[@]}"; do
-    IMAGE_NAME="letsencrypt/${BASE_NAME}"
+    IMAGE_NAME="adferrand/${BASE_NAME}"
 
     echo "Updating docker ${IMAGE_NAME} image..."
 
     # create docker image
-    docker build -t "${IMAGE_NAME}:temp" -f "docker/${BASE_NAME}/Dockerfile" .
+    docker build -t "${IMAGE_NAME}:temp" -f "docker/${BASE_NAME}/Dockerfile-linux" .
 
     # push images
     if [ -n "${TRAVIS_TAG}" ]; then
