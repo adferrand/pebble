@@ -16,7 +16,12 @@ import sys
 import signal
 import threading
 import time
-import urllib2
+try:
+    from urllib.request import urlopen
+    from urllib.error import URLError
+except ImportError:
+    from urllib2 import urlopen
+    from urllib2 import URLError
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
@@ -121,7 +126,7 @@ def do_dns_challenges(client, authzs):
         name, value = (c.validation_domain_name(a.body.identifier.value),
             c.validation(client.net.key))
         cleanup_hosts.append(name)
-        urllib2.urlopen(SET_TXT,
+        urlopen(SET_TXT,
             data=json.dumps({
                 "host": name + ".",
                 "value": value,
@@ -129,7 +134,7 @@ def do_dns_challenges(client, authzs):
         client.answer_challenge(c, c.response(client.net.key))
     def cleanup():
         for host in cleanup_hosts:
-            urllib2.urlopen(CLEAR_TXT,
+            urlopen(CLEAR_TXT,
                 data=json.dumps({
                     "host": host + ".",
                 })).read()
@@ -154,9 +159,9 @@ def do_http_challenges(client, authzs):
         # Loop until the HTTP01Server is ready.
         while True:
             try:
-                urllib2.urlopen("http://localhost:%d" % port)
+                urlopen("http://localhost:%d" % port)
                 break
-            except urllib2.URLError:
+            except URLError:
                 time.sleep(0.1)
 
         for chall_body in challs:
