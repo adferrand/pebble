@@ -14,6 +14,7 @@ environment:
   DOCKER_PASS:
     secure: 2WgIPEABjxf1fjwGLEd7Lg==
   GO111MODULE: on
+  GOPATH: C:\gopath
 
 install:
   - git clone https://github.com/adferrand/certbot --branch fix-pipstrap-on-windows
@@ -24,6 +25,8 @@ install:
 
 build_script:
   - go install -v -mod=vendor ./...
+  - set
+  - ls C:\gopath\bin
   - start /b cmd /c C:\gopath\bin\pebble.exe
 
 test_script:
