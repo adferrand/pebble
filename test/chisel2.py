@@ -50,6 +50,15 @@ PORT = os.getenv('PORT', '5002')
 SET_TXT = "http://localhost:8055/set-txt"
 CLEAR_TXT = "http://localhost:8055/clear-txt"
 
+def wait_for_acme_server():
+    """Wait for directory URL set in the DIRECTORY env variable to respond"""
+    while True:
+    try:
+        urlopen(DIRECTORY)
+        break
+    except URLError:
+        time.sleep(0.1)
+
 def make_client(email=None):
     """Build an acme.Client and register a new account with a random key."""
     key = josepy.JWKRSA(key=rsa.generate_private_key(65537, 2048, default_backend()))
@@ -200,6 +209,7 @@ if __name__ == "__main__":
         print(__doc__)
         sys.exit(0)
     try:
+        wait_for_acme_server()
         auth_and_issue(domains)
     except messages.Error as e:
         print(e)
