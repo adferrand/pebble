@@ -41,5 +41,5 @@ deploy:
     script: bash .travis/publish_linux.sh
     skip_cleanup: true
     on:
-      repo: letsencrypt/pebble
+      repo: adferrand/pebble
       tags: true
