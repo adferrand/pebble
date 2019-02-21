@@ -38,7 +38,7 @@ script:
 
 deploy:
   - provider: script
-    script: bash .travis/publish_linux.sh
+    script: bash .ci/publish_linux.sh
     skip_cleanup: true
     on:
       repo: adferrand/pebble
