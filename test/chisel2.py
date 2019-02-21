@@ -8,6 +8,7 @@ $ . venv/bin/activate
 $ pip install -r requirements.txt
 $ python chisel.py foo.com bar.com
 """
+from __future__ import print_function
 import json
 import logging
 import os
@@ -191,10 +192,10 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     domains = sys.argv[1:]
     if len(domains) == 0:
-        print __doc__
+        print(__doc__)
         sys.exit(0)
     try:
         auth_and_issue(domains)
     except messages.Error, e:
-        print e
+        print(e)
         sys.exit(1)
