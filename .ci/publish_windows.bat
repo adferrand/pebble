@@ -1,7 +1,7 @@
 if "%APPVEYOR_REPO_TAG%"=="true" (
     echo Publishing...
 ) else (
-    echo "Skipping publishing"
+    echo Skipping publishing
     exit /b 0
 )
 
@@ -13,17 +13,17 @@ set base_names = pebble pebble-challtestsrv
     set image_name="adferrand/%basename%"
     set tag="%APPVEYOR_REPO_TAG_NAME%-nanoserver-sac2016"
 
-    echo "Updating docker %basename% image..."
+    echo Updating docker %basename% image...
 
     docker build -t "%image_name%:temp" -f "docker/%base_name%/Dockerfile-windows" .
 
-    echo "Try to publish image: %image_name%/%tag%"
+    echo Try to publish image: %image_name%/%tag%
     docker tag "%image_name%:temp" "%image_name%/%tag%"
     docker push "%image_name%/%tag%"
 
-    echo "Try to publish rolling image: %image_name%/nanoserver-sac2016"
+    echo Try to publish rolling image: %image_name%/nanoserver-sac2016
     docker tag "%image_name%:temp" "%image_name%/nanoserver-sac2016"
     docker push "%image_name%/nanoserver-sac2016"
 ))
 
-echo "Published"
+echo Published
