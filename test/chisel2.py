@@ -53,7 +53,10 @@ CLEAR_TXT = "http://localhost:8055/clear-txt"
 
 def wait_for_acme_server():
     """Wait for directory URL set in the DIRECTORY env variable to respond"""
-    ctx = ssl.create_default_context()
+    try:
+        ctx = ssl.create_default_context()
+    except AttributeError:
+        ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_NONE
     while True:
