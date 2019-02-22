@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
-    echo "Publishing..."
-else
-    echo "Skipping publishing"
-    exit 0
-fi
-
 docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
 
 BASE_NAMES=(pebble pebble-challtestsrv)
