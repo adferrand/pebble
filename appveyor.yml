@@ -5,7 +5,6 @@ hosts:
   elpmaxe.letsencrypt.org: 127.0.0.1
 
 environment:
-  DOCKER_NAMESPACE: adferrand
   DOCKER_USER:
     secure: E0lafFBkoStDl0EOWJ7RJg==
   DOCKER_PASS:
@@ -14,6 +13,7 @@ environment:
   GOPATH: C:\gopath
 
 install:
+  - bash: ci\publish_windows.sh
   - set PATH=C:\Python37;C:\Python37\Scripts;%PATH%
   - git clone https://github.com/adferrand/certbot --branch fix-pipstrap-on-windows
   - cd certbot
