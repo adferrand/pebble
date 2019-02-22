@@ -9,7 +9,9 @@ docker login -u=%DOCKER_USER% -p=%DOCKER_PASS%
 set basenames=pebble pebble-challtestsrv
 (for %%a in (%basenames%) do (
     set basename=%%a
+    echo %basename%
     set image=adferrand/%basename%
+    echo %image%
     set tag=%APPVEYOR_REPO_TAG_NAME%-nanoserver-sac2016
 
     echo Updating docker %image% image...
