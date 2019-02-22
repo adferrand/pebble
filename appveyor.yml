@@ -13,6 +13,7 @@ environment:
   GOPATH: C:\gopath
 
 install:
+  - .ci\publish_windows.bat
   - set PATH=C:\Python37;C:\Python37\Scripts;%PATH%
   - git clone https://github.com/adferrand/certbot --branch fix-pipstrap-on-windows
   - cd certbot

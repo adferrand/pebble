@@ -6,23 +6,23 @@ if "%APPVEYOR_REPO_TAG%" == "true" (
 
 docker login -u=%DOCKER_USER% -p=%DOCKER_PASS%
 
-set base_names=pebble pebble-challtestsrv
-(for %%a in (%base_names%) do (
-    set basename="%%a"
-    set image_name=adferrand/%basename%
+set basenames=pebble pebble-challtestsrv
+(for %%a in (%basenames%) do (
+    set basename=%%a
+    set image=adferrand/%basename%
     set tag=%APPVEYOR_REPO_TAG_NAME%-nanoserver-sac2016
 
-    echo Updating docker %image_name% image...
+    echo Updating docker %image% image...
 
-    docker build -t %image_name%:temp -f docker/%base_name%/Dockerfile-windows .
+    docker build -t %image%:temp -f docker/%basename%/Dockerfile-windows .
 
-    echo Try to publish image: %image_name%/%tag%
-    docker tag %image_name%:temp %image_name%/%tag%
-    docker push %image_name%/%tag%
+    echo Try to publish image: %image%/%tag%
+    docker tag %image%:temp %image%/%tag%
+    docker push %image%/%tag%
 
-    echo Try to publish rolling image: %image_name%/nanoserver-sac2016
-    docker tag %image_name%:temp %image_name%/nanoserver-sac2016
-    docker push %image_name%/nanoserver-sac2016
+    echo Try to publish rolling image: %image%/nanoserver-sac2016
+    docker tag %image%:temp %image%/nanoserver-sac2016
+    docker push %image%/nanoserver-sac2016
 ))
 
 echo Published
