@@ -13,7 +13,6 @@ environment:
   GOPATH: C:\gopath
 
 install:
-  - ps: .ci\publish_windows.ps1
   - set PATH=C:\Python37;C:\Python37\Scripts;%PATH%
   - git clone https://github.com/adferrand/certbot --branch fix-pipstrap-on-windows
   - cd certbot
@@ -31,7 +30,7 @@ test_script:
   - python .\test\chisel2.py example.letsencrypt.org elpmaxe.letsencrypt.org
 
 deploy_script:
-  - .ci\publish_windows.bat
+  - ps: .ci\publish_windows.ps1
 
 on_finish:
   - ps: Stop-Process -Id $PebbleProcess.Id
