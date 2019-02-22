@@ -8,11 +8,11 @@ docker login -u=%DOCKER_USER% -p=%DOCKER_PASS%
 
 set base_names=pebble pebble-challtestsrv
 (for %%a in (%base_names%) do (
-    set basename=%%a
+    set basename="%%a"
     set image_name=adferrand/%basename%
     set tag=%APPVEYOR_REPO_TAG_NAME%-nanoserver-sac2016
 
-    echo Updating docker %basename% image...
+    echo Updating docker %image_name% image...
 
     docker build -t %image_name%:temp -f docker/%base_name%/Dockerfile-windows .
 
