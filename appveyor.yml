@@ -30,7 +30,7 @@ test_script:
   - python .\test\chisel2.py example.letsencrypt.org elpmaxe.letsencrypt.org
 
 deploy_script:
-  - ps: docker login -u $env:DOCKER_USER -p $env:DOCKER_PASS
+  - docker login -u %DOCKER_USER% -p %DOCKER_PASS%
   - ps: |
       if ($env:APPVEYOR_REPO_TAG -ne "true") {
           write-host "Skipping publishing"
