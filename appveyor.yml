@@ -8,12 +8,12 @@ environment:
   DOCKER_USER:
     secure: E0lafFBkoStDl0EOWJ7RJg==
   DOCKER_PASS:
-    secure: 9+a3/SdMOddzPwYo8cPgqg==
+    secure: srzjN1Ls5U+eCDPfoovBlg==
   GO111MODULE: on
   GOPATH: C:\gopath
 
 install:
-  - bash: ci\publish_windows.sh
+  - .ci\publish_windows.bat
   - set PATH=C:\Python37;C:\Python37\Scripts;%PATH%
   - git clone https://github.com/adferrand/certbot --branch fix-pipstrap-on-windows
   - cd certbot
