@@ -5,6 +5,7 @@ hosts:
   elpmaxe.letsencrypt.org: 127.0.0.1
 
 environment:
+  DOCKER_NAMESPACE: adferrand
   DOCKER_USER:
     secure: E0lafFBkoStDl0EOWJ7RJg==
   DOCKER_PASS:
@@ -13,7 +14,6 @@ environment:
   GOPATH: C:\gopath
 
 install:
-  - ps: .ci\publish_windows.ps1
   - set PATH=C:\Python37;C:\Python37\Scripts;%PATH%
   - git clone https://github.com/adferrand/certbot --branch fix-pipstrap-on-windows
   - cd certbot
@@ -31,32 +31,7 @@ test_script:
   - python .\test\chisel2.py example.letsencrypt.org elpmaxe.letsencrypt.org
 
 deploy_script:
-  - |
-      if "$env:APPVEYOR_REPO_TAG" != "true" (
-          echo Skipping publishing
-      ) else (
-          echo Publishing ...
-
-          docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
-
-          $basenames = @("pebble", "pebble-challtestsrv")
-          foreach ($basename in $basenames) {
-              $image_name = "adferrand/$basename"
-              $tag = "$env:APPVEYOR_REPO_TAG_NAME-nanoserver-sac2016"
-
-              write-host "Updating docker $basename image ..."
-
-              docker build -t $image_name`:temp -f docker/$basename/Dockerfile-windows
-
-              write-host "Try to publish image: $image_name`:$tag"
-              docker tag $image_name`:temp $image_name`:tag
-              docker push $image_name`:$tag
-
-              write-host "Try to publish rolling image: $image_name`:nanoserver-sac2016"
-              docker tag $image_name`:temp $image_name`:nanoserver-sac2016
-              docker push $image_name`:nanoserver-sac2016
-          }
-      )
+  - ps: .ci\publish_windows.ps1
 
 on_finish:
   - ps: Stop-Process -Id $PebbleProcess.Id
