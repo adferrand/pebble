@@ -31,10 +31,10 @@ test_script:
 
 deploy_script:
   - |
-      if ($env:APPVEYOR_REPO_TAG -ne "true") {
-          write-host "Skipping publishing"
-      } else {
-          write-host "Publishing ..."
+      if "$env:APPVEYOR_REPO_TAG" != "true" (
+          echo Skipping publishing
+      ) else (
+          echo Publishing ...
 
           docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
 
@@ -55,7 +55,7 @@ deploy_script:
               docker tag $image_name`:temp $image_name`:nanoserver-sac2016
               docker push $image_name`:nanoserver-sac2016
           }
-      }
+      )
 
 on_finish:
   - ps: Stop-Process -Id $PebbleProcess.Id
