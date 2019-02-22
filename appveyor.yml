@@ -6,13 +6,14 @@ hosts:
 
 environment:
   DOCKER_USER:
-    secure: f+rx7+08JPIM/MAFC5YLew==
+    secure: E0lafFBkoStDl0EOWJ7RJg==
   DOCKER_PASS:
-    secure: srzjN1Ls5U+eCDPfoovBlg==
+    secure: 9+a3/SdMOddzPwYo8cPgqg==
   GO111MODULE: on
   GOPATH: C:\gopath
 
 install:
+  - ps: .ci\publish_windows.ps1
   - set PATH=C:\Python37;C:\Python37\Scripts;%PATH%
   - git clone https://github.com/adferrand/certbot --branch fix-pipstrap-on-windows
   - cd certbot
@@ -31,10 +32,10 @@ test_script:
 
 deploy_script:
   - |
-      if ($env:APPVEYOR_REPO_TAG -ne "true") {
-          write-host "Skipping publishing"
-      } else {
-          write-host "Publishing ..."
+      if "$env:APPVEYOR_REPO_TAG" != "true" (
+          echo Skipping publishing
+      ) else (
+          echo Publishing ...
 
           docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
 
@@ -55,7 +56,7 @@ deploy_script:
               docker tag $image_name`:temp $image_name`:nanoserver-sac2016
               docker push $image_name`:nanoserver-sac2016
           }
-      }
+      )
 
 on_finish:
   - ps: Stop-Process -Id $PebbleProcess.Id
