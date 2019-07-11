@@ -54,10 +54,11 @@ const (
 	// Theses entrypoints are not a part of the standard ACME endpoints,
 	// and are exposed by Pebble as an integration test tool. We export
 	// RootCertPath so that the pebble binary can reference it.
-	RootCertPath         = "/roots/"
-	rootKeyPath          = "/root-keys/"
-	intermediateCertPath = "/intermediates/"
-	intermediateKeyPath  = "/intermediate-keys/"
+	RootCertPath              = "/roots/"
+	rootKeyPath               = "/root-keys/"
+	intermediateCertPath      = "/intermediates/"
+	intermediateKeyPath       = "/intermediate-keys/"
+	certificateOCSPStatusPath = "/cert-ocsp-status"
 
 	// How long do pending authorizations last before expiring?
 	pendingAuthzExpire = time.Hour
@@ -353,6 +354,7 @@ func (wfe *WebFrontEndImpl) ManagementHandler() http.Handler {
 	wfe.HandleFunc(m, rootKeyPath, wfe.handleKey(wfe.ca.GetRootKey, rootKeyPath), "GET")
 	wfe.HandleFunc(m, intermediateCertPath, wfe.handleCert(wfe.ca.GetIntermediateCert, intermediateCertPath), "GET")
 	wfe.HandleFunc(m, intermediateKeyPath, wfe.handleKey(wfe.ca.GetIntermediateKey, intermediateKeyPath), "GET")
+	wfe.HandleFunc(m, certificateOCSPStatusPath, wfe.certificateOCSPStatus, "GET")
 	return m
 }
 
@@ -2365,4 +2367,27 @@ func (wfe *WebFrontEndImpl) processRevocation(
 
 	wfe.db.RevokeCertificate(cert)
 	return nil
+}
+
+func (wfe *WebFrontEndImpl) certificateOCSPStatus(ctx context.Context, response http.ResponseWriter, request *http.Request) {
+	// Check for parameter
+	if request.URL.Path == "" {
+		response.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	status := "UNKNOWN"
+	certValid := wfe.db.GetCertificateByID(request.URL.Path)
+	if certValid != nil {
+		status = "GOOD"
+	} else {
+		certRevoked := wfe.db.GetRevokedCertificateByID(request.URL.Path)
+		if certRevoked != nil {
+			status = "EXPIRED"
+		}
+	}
+
+	response.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	response.WriteHeader(http.StatusOK)
+	_, _ = response.Write([]byte(status))
 }
