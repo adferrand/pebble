@@ -22,5 +22,8 @@ func main() {
 	fmt.Printf("Error is: %s\n", err)
 
 	// Result on Linux
-	// Err is: lookup stupid.entry.net on 127.0.0.53:53: dial udp 4.3.2.1:404: i/o timeout
+	// Error is: lookup stupid.entry.net on 127.0.0.53:53: dial udp 4.3.2.1:404: i/o timeout
+
+	// Result on Windows
+	// Error is: lookup stupid.entry.net: dnsquery: DNS name does not exist.
 }
