@@ -66,7 +66,7 @@ deploy:
     script: bash .ci/publish_linux.sh
     skip_cleanup: true
     on:
-      repo: letsencrypt/pebble
+      repo: adferrand/pebble
       tags: true
   - provider: releases
     name: Pebble $TRAVIS_TAG
@@ -76,5 +76,5 @@ deploy:
     skip_cleanup: true
     draft: true
     on:
-      repo: letsencrypt/pebble
+      repo: adferrand/pebble
       tags: true
